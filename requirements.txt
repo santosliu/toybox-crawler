@@ -1,0 +1,10 @@
+playwright
+nest-asyncio
+google
+mysql-connector-python
+python-dotenv
+aiohttp
+aiofiles
+google-generativeai
+openai
+beautifulsoup4
