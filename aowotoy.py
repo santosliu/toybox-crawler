@@ -176,7 +176,7 @@ async def crawl_single(mydb, data):
                         if image_url:
                             image_name = os.path.basename(image_url)
                             image_ext = os.path.splitext(image_name)[1]
-                            saved_name = f"{product_id}_{count}{image_ext}"
+                            saved_name = f"{product_id}_{count}.jpg"
                             image_path = os.path.join(product_id_dir, saved_name)
 
                             async with session.get(image_url) as img_response:
@@ -201,15 +201,16 @@ async def main():
 
     try:
         
-        # 測試用內容
-        # data.append("https://www.aowotoys.com/products/aowobox-pop-mart-dimoo-whisper-of-the-rose-figure-theme-display-box?locale=zh-hant") 
-        
         for page in range(1, max_page+1):  
             url = f"{base_url}{page}"
             print(f"開始從 {url} 爬取資料...")
             list = await crawl_list(url)
             data = data+list            
         
+        # 測試用內容
+        # data = []
+        # data.append("https://www.aowotoys.com/products/aowobox-pop-mart-dimoo-whisper-of-the-rose-figure-theme-display-box?locale=zh-hant") 
+
         if data: # 確保有資料才繼續
             print("開始爬取文章內容、圖片並即時寫入資料庫...")
             await crawl_single(mydb, data) 

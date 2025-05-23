@@ -2,7 +2,6 @@
 .env
 item
 products
-
-#ignore csv
 *.csv
 *.zip
+*.json

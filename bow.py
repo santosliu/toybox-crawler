@@ -9,11 +9,13 @@ import re
 import asyncio
 from playwright.async_api import async_playwright
 import random
-import aiohttp 
+import aiohttp
 from dotenv import load_dotenv
 import mysql.connector # 保留 mysql.connector 以便處理可能的錯誤類型
 import json # 新增導入 json 模組
 from urllib.parse import urljoin # 導入 urljoin
+from PIL import Image # 導入 Pillow 的 Image 模組
+import io # 導入 io 模組
 
 # 設定 headers 模擬瀏覽器請求
 headers = {
@@ -175,13 +177,22 @@ async def crawl_single(mydb, data):
                         
                         if image_url:
                             image_name = os.path.basename(image_url)
-                            image_ext = os.path.splitext(image_name)[1]
-                            saved_name = f"{count}{image_ext}"
+                            saved_name = f"{product_id}_{count}.jpeg" # 將副檔名固定為 .jpeg
                             image_path = os.path.join(product_id_dir, saved_name)
 
                             async with session.get(image_url) as img_response:
-                                with open(image_path, 'wb') as img_file:
-                                    img_file.write(await img_response.read())
+                                # 使用 Pillow 轉換為 JPG
+                                try:
+                                    image_data = await img_response.read()
+                                    img = Image.open(io.BytesIO(image_data))
+                                    # 將圖片轉換為 RGB 模式，以避免儲存為 JPG 時出現錯誤 (例如處理 PNG 的 RGBA 模式)
+                                    if img.mode == 'RGBA':
+                                        img = img.convert('RGB')
+                                    img.save(image_path, 'JPEG')
+                                    print(f"圖片已下載並轉換為 JPG 儲存至: {image_path}")
+                                except Exception as img_convert_e:
+                                    print(f"處理圖片時發生錯誤 for {image_url}: {img_convert_e}")
+
 
                 except Exception as e:
                     print(f"爬取單篇文章 {url} 時發生錯誤: {e}")
@@ -201,15 +212,15 @@ async def main():
 
     try:
         
-        # 測試用內容
-        # data.append("https://www.aowotoys.com/products/aowobox-pop-mart-dimoo-whisper-of-the-rose-figure-theme-display-box?locale=zh-hant") 
-        
         for page in range(1, max_page+1):  
             url = f"{base_url}{page}"
             print(f"開始從 {url} 爬取資料...")
             list = await crawl_list(url)
             data = data+list            
         
+        # 測試用內容
+        # data.append("https://www.aowotoys.com/products/aowobox-pop-mart-dimoo-whisper-of-the-rose-figure-theme-display-box?locale=zh-hant") 
+
         if data: # 確保有資料才繼續
             print("開始爬取文章內容、圖片並即時寫入資料庫...")
             await crawl_single(mydb, data) 

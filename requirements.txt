@@ -8,3 +8,4 @@ aiofiles
 google-generativeai
 openai
 beautifulsoup4
+Pillow
