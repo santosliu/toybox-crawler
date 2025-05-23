@@ -2,5 +2,7 @@
 .env
 item
 products
-bow.py
-aowotoy_products.py
+
+#ignore csv
+*.csv
+*.zip

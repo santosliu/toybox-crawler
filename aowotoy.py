@@ -176,7 +176,7 @@ async def crawl_single(mydb, data):
                         if image_url:
                             image_name = os.path.basename(image_url)
                             image_ext = os.path.splitext(image_name)[1]
-                            saved_name = f"{count}{image_ext}"
+                            saved_name = f"{product_id}_{count}{image_ext}"
                             image_path = os.path.join(product_id_dir, saved_name)
 
                             async with session.get(image_url) as img_response:
