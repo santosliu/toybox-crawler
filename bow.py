@@ -1,14 +1,7 @@
 """
-檔案名稱: GameSpot_scrap.py
-版本: 1.1 (Refactored DB operations)
-建立日期: 2025/04/09
-修改日期: 2025/04/17
-作者: santosliu
-
 描述:
-    從 GameSpot 備份文章和首圖，資料庫操作已移至 db_utils.py
-        
-備註:
+    爬取 aowotoys 網站的產品資料，包括產品 ID、標題、摘要、價格、選項和詳細描述，並將這些資料寫入 MySQL 資料庫。
+    下載產品圖片並儲存到本地目錄中。
     
 """
 import os
@@ -152,12 +145,6 @@ async def crawl_single(mydb, data):
                         try:
                             cursor = mydb.cursor()
                             
-                            # 嘗試將價格轉換為整數，如果失敗則設置為 0
-                            # try:
-                            #     price_int = int(re.sub(r'[^\d]', '', price)) if 'price' in locals() and price else 0
-                            # except ValueError:
-                            #     price_int = 0
-
                             sql = "INSERT INTO aowotoy_products (product_id, option_id, url, name, summary, price, option, detail) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
                             val = (product_id, 
                                 option_id if 'option_id' in locals() else '',
@@ -176,8 +163,6 @@ async def crawl_single(mydb, data):
                             print(f"寫入資料庫時發生錯誤 for {url}: {err}")
                             if mydb.is_connected():
                                 mydb.rollback() # 發生錯誤時回滾事務
-
-
 
                     # 下載圖片
                     count = 0
@@ -210,20 +195,20 @@ async def main():
         print("無法連線到資料庫，程式終止。")
         return 
         
-    base_url = "https://www.aowotoys.com/categories/aowobox-displaybox?sort_by=created_at&order_by=desc&limit=72&page="
+    base_url = "https://www.aowotoys.com/categories/aowobox-displaybox?sort_by=created_at&order_by=asc&limit=72&page="
     max_page = 33 # 設定最大頁數
     data = [] # 初始化資料列表
 
     try:
         
         # 測試用內容
-        data.append("https://www.aowotoys.com/products/aowobox-pop-mart-dimoo-whisper-of-the-rose-figure-theme-display-box?locale=zh-hant") 
+        # data.append("https://www.aowotoys.com/products/aowobox-pop-mart-dimoo-whisper-of-the-rose-figure-theme-display-box?locale=zh-hant") 
         
-        # for page in range(1, max_page+1):  
-        #     url = f"{base_url}{page}"
-        #     print(f"開始從 {url} 爬取資料...")
-        #     list = await crawl_list(url)
-        #     data = data+list            
+        for page in range(1, max_page+1):  
+            url = f"{base_url}{page}"
+            print(f"開始從 {url} 爬取資料...")
+            list = await crawl_list(url)
+            data = data+list            
         
         if data: # 確保有資料才繼續
             print("開始爬取文章內容、圖片並即時寫入資料庫...")
