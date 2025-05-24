@@ -52,6 +52,21 @@ def export_to_csv():
             # Define the CSV file path
             product_csv_file = os.path.join(product_dir, csv_file)
 
+            # Delete the CSV file if it exists
+            # if os.path.exists(product_csv_file):
+            #     os.remove(product_csv_file)
+            #     print(f"Deleted existing file: {product_csv_file}")
+
+            # 如果不存在就製作
+            if not os.path.exists(product_csv_file):
+                with open(product_csv_file, 'w', newline='', encoding='utf-8') as f:
+                    writer = csv.writer(f)
+                    writer.writerow(column_names)
+
+            # 名稱取代
+            name = name.replace('高達', '鋼彈')
+            name = name.replace('AOWOBOX', '阿庫力')
+
             # Transform data row to the new format
             transformed_row = [
                 '50008',
@@ -68,9 +83,8 @@ def export_to_csv():
             transformed_row.extend([''] * 26)
 
             # Write data to CSV file for the current product
-            with open(product_csv_file, 'w', newline='', encoding='utf-8') as f:
+            with open(product_csv_file, 'a', newline='', encoding='utf-8') as f:
                 writer = csv.writer(f)
-                writer.writerow(column_names)
                 writer.writerow(transformed_row)
 
             print(f"Data for product {product_id} exported to {product_csv_file}")

@@ -10,3 +10,10 @@
   - jolly
 - 輸出到指定網站
 
+# 待處理
+
+https://www.aowotoys.com/products/aowobox-pop-mart-zsiga-waiting-figure-theme-display-box?locale=zh-hant
+這個網址抓了第二張圖有問題
+
+寫個程式檢查有哪些目錄沒有 1 2 號圖的
+其他就不管了
