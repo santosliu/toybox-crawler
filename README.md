@@ -17,3 +17,6 @@ https://www.aowotoys.com/products/aowobox-pop-mart-zsiga-waiting-figure-theme-di
 
 寫個程式檢查有哪些目錄沒有 1 2 號圖的
 其他就不管了
+
+輸出時的價格請捨棄尾數
+比方說 396 改成 390
