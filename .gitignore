@@ -6,3 +6,6 @@ products
 *.zip
 *.json
 *.xlsx
+.pytest_cache
+/src/__pycache__/
+/test/__pycache__/
