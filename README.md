@@ -10,13 +10,16 @@
   - jolly
 - 輸出到指定網站
 
-# 待處理
+# 露天上稿
 
-https://www.aowotoys.com/products/aowobox-pop-mart-zsiga-waiting-figure-theme-display-box?locale=zh-hant
-這個網址抓了第二張圖有問題
+- 先上所有商品
+- 取得本賣家所有商品
+- 依照商品上圖片
 
-寫個程式檢查有哪些目錄沒有 1 2 號圖的
-其他就不管了
+- 無需拼裝一體式
+- 無需拼裝
+- 透明無噴繪
+- 有「預購」
+- 有「解放玩具」
 
-輸出時的價格請捨棄尾數
-比方說 396 改成 390
+先篩選這五種的不上架就可以了
